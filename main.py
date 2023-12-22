@@ -1,17 +1,11 @@
-import asyncio
-from typing import Union
 from fastapi import FastAPI
-from pydantic import BaseModel
-from prisma import Prisma
+from entity.itemModel import Item
+from prismaClient.client import PrismaClient
 
 app = FastAPI()
 
-prisma = Prisma()
+prisma = PrismaClient()
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
 
 @app.get('/')
 async def read_root():
@@ -19,40 +13,40 @@ async def read_root():
 
 @app.get('/items')
 async def list_items():
-    await prisma.connect()
-    items = await prisma.item.find_many()
-    await prisma.disconnect()
+    await prisma.changeConnection()
+    items = await prisma.client.item.find_many()
+    await prisma.changeConnection()
     return {"items:": items}
 
 @app.get('/items/{item_id}')
 async def read_item(item_id: int):
-    await prisma.connect()
-    item = await prisma.item.find_unique(
+    await prisma.changeConnection()
+    item = await prisma.client.item.find_unique(
         where={
             'id':item_id
         }
     )
-    await prisma.disconnect()
+    await prisma. changeConnection()
     return {"item_id": item}
 
 
 @app.post('/items/')
 async def register_item(item: Item):
-    await prisma.connect()
-    await prisma.item.create(
+    await prisma.changeConnection()
+    await prisma.client.item.create(
         data={
             "name": item.name,
             "price": item.price,
             "isOffer" : item.isOffer
         }
     )
-    await prisma.disconnect()
+    await prisma.changeConnection()
     return {"Message": "Item adicionado com sucesso"}
     
 
 @app.put('/items/{item_id}')
 async def update_item(item_id: int, itemModel: Item):
-    await prisma.connect()
+    await prisma.changeConnection()
     await prisma.item.update(
         where={
             'id': item_id
@@ -60,19 +54,19 @@ async def update_item(item_id: int, itemModel: Item):
         data={
             'name': itemModel.name,
             'price': itemModel.price,
-            'isOffer': itemModel.is_offer
+            'isOffer': itemModel.isOffer
         }
     )
-    await prisma.disconnect()
+    await prisma.changeConnection()
     return{'Message":"Produto '+itemModel.name+' alterado'}
 
 @app.delete('/items/{item_id}')
 async def delete_item(item_id: int):
-    await prisma.connect()
-    await prisma.item.delete(
+    await prisma.changeConnection()
+    await prisma.client.item.delete(
         where={
             'id': item_id
         }
     )
-    await prisma.disconnect()
+    await prisma.changeConnection()
     return {'Message': 'Produto removido com sucesso'}
