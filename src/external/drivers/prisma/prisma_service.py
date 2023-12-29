@@ -8,5 +8,9 @@ class PrismaService(ABC):
         self.client = client
     
     @abstractmethod
+    async def getAll(self):
+        raise NotImplemented    
+
+    @abstractmethod
     async def get(self, id: int):
         raise NotImplemented

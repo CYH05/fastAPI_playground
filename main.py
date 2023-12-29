@@ -11,26 +11,23 @@ app = FastAPI()
 
 prisma = PrismaClient()
 
+client = Prisma()
+service = PrismaItemService(client)
+datasource = ItemDatasource(service)
+repository = ItemRepository(datasource)
+use_case = ItemUsecase(repository)
 
 @app.get('/')
 async def read_root():
-    return {"Hello": "World"}
+    return {"Tip": "Access the url 127.0.0.1/8000/docs, to get a better view from the end points"}
 
 @app.get('/items')
 async def list_items():
-    await prisma.changeConnection(True)
-    items = await prisma.client.item.find_many()
-    await prisma.changeConnection(False)
-    return {"items:": items}
+    items = await use_case.getAll()
+    return items
 
 @app.get('/items/{item_id}')
 async def read_item(item_id: int):
-    client = Prisma()
-    service = PrismaItemService(client)
-    datasource = ItemDatasource(service)
-    repository = ItemRepository(datasource)
-    use_case = ItemUsecase(repository)
-    
     item = await use_case.getItem(item_id)
     return item
 

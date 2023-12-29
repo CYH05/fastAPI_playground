@@ -7,6 +7,12 @@ class PrismaItemService(PrismaService):
     def __init__(self, client: Prisma) -> None:
         super().__init__(client)
         
+    async def getAll(self):
+        await self.changeConnection(True)
+        items = await self.client.item.find_many()
+        await self.changeConnection(False)
+        return items
+        
     async def get(self, id: int):
         await self.changeConnection(True)
         item = await self.client.item.find_unique(

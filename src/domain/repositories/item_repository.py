@@ -12,9 +12,5 @@ class ItemRepositoryInterface(ABC):
         raise NotImplemented
 
     @abstractmethod
-    def create(self, name: str, price: float, is_offer: bool) -> Item:
-        raise NotImplemented
-
-    @abstractmethod
-    def update(self, item: Item) -> Item:
+    def findAll(self) -> list[Item]:
         raise NotImplemented

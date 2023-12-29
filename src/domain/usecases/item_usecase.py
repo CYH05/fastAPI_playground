@@ -9,3 +9,6 @@ class ItemUsecase(ItemUsecaseInterface):
     async def getItem(self, item_id: int):
         return await self.repository.findByID(item_id)
         
+    async def getAll(self):
+        return await self.repository.findAll()
+        

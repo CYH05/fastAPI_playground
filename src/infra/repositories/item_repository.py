@@ -11,9 +11,5 @@ class ItemRepository(ItemRepositoryInterface):
     async def findByID(self, item_id: int) -> Item:
         return await self.datasource.findByID(item_id)
     
-    def create(self, name: str, price: float, is_offer: bool) -> Item:
-        item = Item(name=name, price=price, is_offer=is_offer)
-        return item
-    
-    def update(self, item: Item) -> Item:
-        return super().update(item)
+    async def findAll(self) -> list[Item]:
+        return await self.datasource.findAll()
