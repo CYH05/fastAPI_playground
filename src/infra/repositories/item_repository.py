@@ -1,4 +1,7 @@
 
+from typing import Union
+
+from src.domain.exceptions.exception import AbstractBaseException, InvalidDataFormatException, MissingDataException
 from src.infra.datasources.item_datasource import ItemDatasourceInterface
 from src.domain.entities.item_entity import Item
 from src.domain.repositories.item_repository import ItemRepositoryInterface
@@ -13,3 +16,12 @@ class ItemRepository(ItemRepositoryInterface):
     
     async def findAll(self) -> list[Item]:
         return await self.datasource.findAll()
+    
+    async def createItem(self, data: dict) -> Union[AbstractBaseException, dict]:
+        try:
+            response = await self.datasource.createItem(data)
+        except InvalidDataFormatException as e:
+            response = {'message': e.message, 'status': e.status}
+        except MissingDataException as e:
+            response = {'message': e.message, 'status': e.status}
+        return response

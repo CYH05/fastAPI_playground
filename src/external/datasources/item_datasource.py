@@ -1,5 +1,9 @@
+from typing import Union
+
+from src.domain.exceptions.exception import AbstractBaseException
 from src.domain.entities.item_entity import Item
 from src.infra.datasources.item_datasource import ItemDatasourceInterface
+from src.external.utils.validators import validadeData
 
 
 class ItemDatasource(ItemDatasourceInterface):
@@ -12,3 +16,8 @@ class ItemDatasource(ItemDatasourceInterface):
     
     async def findAll(self) -> list[Item]:
         return await self.database_service.getAll()
+    
+    async def createItem(self, data: dict) -> Union[AbstractBaseException, dict]:
+        validadeData(data)
+        response = await self.database_service.create(data)
+        return response

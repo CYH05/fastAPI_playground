@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import Union
+
+from src.domain.exceptions.exception import AbstractBaseException
 from src.infra.datasources.item_datasource import ItemDatasourceInterface
 from src.domain.entities.item_entity import Item
 
@@ -9,8 +12,12 @@ class ItemRepositoryInterface(ABC):
     
     @abstractmethod
     async def findByID(self, item_id: int) -> Item:
-        raise NotImplemented
+        pass
 
     @abstractmethod
     def findAll(self) -> list[Item]:
-        raise NotImplemented
+        pass
+    
+    @abstractmethod
+    async def createItem(self, data: dict) -> Union[AbstractBaseException, dict]:
+        pass
