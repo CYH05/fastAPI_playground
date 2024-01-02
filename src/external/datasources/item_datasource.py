@@ -1,6 +1,4 @@
-from typing import Union
-
-from src.domain.exceptions.exception import AbstractBaseException
+from src.domain.exceptions.exception import DuplicatedRegisterException
 from src.domain.entities.item_entity import Item
 from src.infra.datasources.item_datasource import ItemDatasourceInterface
 from src.external.utils.validators import validadeData
@@ -17,7 +15,12 @@ class ItemDatasource(ItemDatasourceInterface):
     async def findAll(self) -> list[Item]:
         return await self.database_service.getAll()
     
-    async def createItem(self, data: dict) -> Union[AbstractBaseException, dict]:
+    async def createItem(self, data: dict) -> dict:
         validadeData(data)
+        if await self.database_service.checkDupplicity(data):
+            raise DuplicatedRegisterException(
+                message='Há um item com o mesmo nome e preço cadastrado.',
+                status=400
+            )
         response = await self.database_service.create(data)
         return response

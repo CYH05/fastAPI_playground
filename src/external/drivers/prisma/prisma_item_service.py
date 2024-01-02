@@ -26,7 +26,6 @@ class PrismaItemService(PrismaService):
         return {"item_id": item}
     
     async def create(self, data: dict) -> dict:
-        #TODO adicionar tipagem ao retorno
         await self.changeConnection(True)
         await self.client.item.create(
             data={
@@ -44,3 +43,17 @@ class PrismaItemService(PrismaService):
         else:
             await self.client.connect()
         return
+    
+    async def checkDupplicity(self, item_data: dict) -> bool:
+        await self.changeConnection(True)
+        item = await self.client.item.find_first(
+            where={
+                'name': item_data['name'],
+                'price': item_data['price'],
+            }
+        )
+        await self.changeConnection(False)
+        
+        if item:
+            return True
+        return False

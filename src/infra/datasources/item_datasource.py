@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union
 
-from src.domain.exceptions.exception import AbstractBaseException
 from src.domain.entities.item_entity import Item
 from src.external.drivers.prisma.prisma_service import PrismaService
 
@@ -20,6 +18,5 @@ class ItemDatasourceInterface(ABC):
         pass
     
     @abstractmethod
-    async def createItem(self, data: dict) -> Union[AbstractBaseException, dict]:
-        #TODO alterar o retorno para um tipo de objeto Response com status e message
+    async def createItem(self, data: dict) -> dict:
         pass
