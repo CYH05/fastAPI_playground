@@ -17,7 +17,7 @@ class PrismaItemService(PrismaService):
         
     async def get(self, id: int) -> Item:
         await self.changeConnection(True)
-        item = await self.client.item.find_unique(
+        item = await self.client.item.find_first(
             where={
                 'id':id
             }
@@ -35,7 +35,23 @@ class PrismaItemService(PrismaService):
             }
         )
         await self.changeConnection(False)
-        return {"Response":{"status": 200, "message": "Item Adicionado com sucesso"}}
+        return {"Response":{"status": 200, "message": "Item adicionado com sucesso."}}
+    
+    
+    async def update(self, id: int, data: dict):
+        await self.changeConnection(True)
+        await self.client.item.update(
+            where={
+                'id': id
+                },
+            data={
+                'name': data['name'],
+                'price': data['price'],
+                'is_offer': data['is_offer'],
+            }
+        )
+        await self.changeConnection(False)
+        return {"Response":{"status": 200, "message": "Item alterado com sucesso."}}
     
     async def changeConnection(self, action: bool) -> None:
         if self.client.is_connected() and not action:
@@ -43,6 +59,8 @@ class PrismaItemService(PrismaService):
         else:
             await self.client.connect()
         return
+    
+    # TODO validar a ideia de juntar as funções checkDupplicity e checkExistence para que recebam o críterio como um dict, apenas adicionando dentro do atributo where da função find_first.
     
     async def checkDupplicity(self, item_data: dict) -> bool:
         await self.changeConnection(True)
@@ -56,4 +74,19 @@ class PrismaItemService(PrismaService):
         
         if item:
             return True
+        return False
+    
+    async def checkExistence(self,  id: int) -> bool:
+        await self.changeConnection(True)
+        
+        item = await self.client.item.find_first(
+            where={
+                'id':id
+            }
+            
+        )
+        await self.changeConnection(False)
+        if item:
+            return True
+        
         return False

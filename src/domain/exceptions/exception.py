@@ -14,3 +14,6 @@ class MissingDataException(AbstractBaseException):
     
 class DuplicatedRegisterException(AbstractBaseException):
     pass
+
+class EntityNotFoundException(AbstractBaseException):
+    pass

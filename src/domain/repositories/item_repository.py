@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union
 
-from src.domain.exceptions.exception import AbstractBaseException
 from src.infra.datasources.item_datasource import ItemDatasourceInterface
 from src.domain.entities.item_entity import Item
 
@@ -19,5 +17,9 @@ class ItemRepositoryInterface(ABC):
         pass
     
     @abstractmethod
-    async def createItem(self, data: dict) -> Union[AbstractBaseException, dict]:
+    async def createItem(self, data: dict) -> dict:
+        pass
+    
+    @abstractmethod
+    async def updateItem(self, id: int, data: dict) -> dict:
         pass

@@ -13,6 +13,8 @@ class ItemUsecase(ItemUsecaseInterface):
     async def getAll(self) -> list[Item]:
         return await self.repository.findAll()
         
-    async def createItem(self, data: dict) -> dict:
-        
+    async def createItem(self, data: dict) -> dict:    
         return await self.repository.createItem(data)
+    
+    async def updateItem(self, id: int, data: dict) -> dict:
+        return await self.repository.updateItem(id, data)

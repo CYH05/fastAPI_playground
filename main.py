@@ -30,7 +30,7 @@ async def list_items() -> list[Item]:
     return items
 
 @app.get('/items/{item_id}')
-async def read_item(item_id: int) -> Item:
+async def read_item(item_id: int) -> dict:
     item = await use_case.getItem(item_id)
     return item
 
@@ -43,21 +43,12 @@ async def register_item(item: dict, response: Response) -> dict:
     return item
     
 
-@app.put('/items/{item_id}')
-async def update_item(item_id: int, itemModel: Item):
-    await prisma.changeConnection(True)
-    await prisma.item.update(
-        where={
-            'id': item_id
-        },
-        data={
-            'name': itemModel.name,
-            'price': itemModel.price,
-            'is_offer': itemModel.is_offer
-        }
-    )
-    await prisma.changeConnection(False)
-    return{'Message":"Produto '+itemModel.name+' alterado'}
+@app.put('/items/{id}')
+async def update_item(id: int, data: dict, response: Response) -> dict:
+    request = await use_case.updateItem(id, data)
+    if 'status' in request:
+        change_status_code(request['status'], response)
+    return request
 
 @app.delete('/items/{item_id}')
 async def delete_item(item_id: int):

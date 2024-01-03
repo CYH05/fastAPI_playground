@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Union
 
 from prisma import Prisma
 
-from src.domain.exceptions.exception import AbstractBaseException
 from src.domain.entities.item_entity import Item
 
 class PrismaService(ABC):
@@ -20,5 +18,21 @@ class PrismaService(ABC):
         pass
     
     @abstractmethod
-    async def create(self, data: dict) -> Union[AbstractBaseException, dict]:
+    async def create(self, data: dict) -> dict:
+        pass
+    
+    @abstractmethod
+    async def update(self, id: int, data: dict) -> dict:
+        pass
+    
+    @abstractmethod
+    async def changeConnection(self, action: bool) -> None:
+        pass
+    
+    @abstractmethod
+    async def checkDupplicity(self, item_data: dict) -> bool:
+        pass
+    
+    @abstractmethod
+    async def checkExistence(self, id: int) -> bool:
         pass

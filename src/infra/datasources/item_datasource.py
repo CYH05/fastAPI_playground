@@ -20,3 +20,7 @@ class ItemDatasourceInterface(ABC):
     @abstractmethod
     async def createItem(self, data: dict) -> dict:
         pass
+    
+    @abstractmethod
+    async def updateItem(self, id: int, data: dict) -> dict:
+        pass
