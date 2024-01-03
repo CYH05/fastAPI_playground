@@ -23,3 +23,7 @@ class ItemRepositoryInterface(ABC):
     @abstractmethod
     async def updateItem(self, id: int, data: dict) -> dict:
         pass
+    
+    @abstractmethod
+    async def deleteItem(self, id: int) -> dict:
+        pass

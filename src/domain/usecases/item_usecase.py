@@ -18,3 +18,6 @@ class ItemUsecase(ItemUsecaseInterface):
     
     async def updateItem(self, id: int, data: dict) -> dict:
         return await self.repository.updateItem(id, data)
+    
+    async def deleteItem(self, id: int) -> dict:
+        return await self.repository.deleteItem(id)

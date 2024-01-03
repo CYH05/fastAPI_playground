@@ -53,6 +53,18 @@ class PrismaItemService(PrismaService):
         await self.changeConnection(False)
         return {"Response":{"status": 200, "message": "Item alterado com sucesso."}}
     
+    async def delete(self, id: int) -> dict:
+
+        # TODO If it's necessary to keep the data for some register, it's possible just turning the field is_offer to false and add the filter is_offer equals true when the list function is called, in these scenario I'll just exclude the register
+        await self.changeConnection(True)
+        await self.client.item.delete(
+            where={
+                'id': id
+            }
+        )
+        await self.changeConnection(False)
+        return {"Response":{"status": 200, "message": "Item removido com sucesso."}}
+    
     async def changeConnection(self, action: bool) -> None:
         if self.client.is_connected() and not action:
             await self.client.disconnect()
@@ -60,7 +72,7 @@ class PrismaItemService(PrismaService):
             await self.client.connect()
         return
     
-    # TODO validar a ideia de juntar as funções checkDupplicity e checkExistence para que recebam o críterio como um dict, apenas adicionando dentro do atributo where da função find_first.
+    # TODO validate the ideia to turn thesefunctions checkDupplicity and checkExistence into one, just changing the parameter, recieving a dict to be the body from the attribute where from function find_first
     
     async def checkDupplicity(self, item_data: dict) -> bool:
         await self.changeConnection(True)

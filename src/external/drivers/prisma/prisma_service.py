@@ -26,6 +26,10 @@ class PrismaService(ABC):
         pass
     
     @abstractmethod
+    async def delete(self, id: int) -> dict:
+        pass
+    
+    @abstractmethod
     async def changeConnection(self, action: bool) -> None:
         pass
     

@@ -7,12 +7,9 @@ from src.domain.entities.item_entity import Item
 from src.domain.usecases.item_usecase import ItemUsecase
 from src.external.datasources.item_datasource import ItemDatasource
 from src.infra.repositories.item_repository import ItemRepository
-from prismaClient.client import PrismaClient
 
 
 app = FastAPI()
-
-prisma = PrismaClient()
 
 client = Prisma()
 service = PrismaItemService(client)
@@ -50,13 +47,10 @@ async def update_item(id: int, data: dict, response: Response) -> dict:
         change_status_code(request['status'], response)
     return request
 
-@app.delete('/items/{item_id}')
-async def delete_item(item_id: int):
-    await prisma.changeConnection(True)
-    await prisma.client.item.delete(
-        where={
-            'id': item_id
-        }
-    )
-    await prisma.changeConnection(False)
-    return {'Message': 'Produto removido com sucesso'}
+@app.delete('/items/{id}')
+async def delete_item(id: int, response: Response):
+    request = await use_case.deleteItem(id)
+    if 'status' in request:
+        change_status_code(request['status'], response)
+    return request
+

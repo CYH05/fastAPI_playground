@@ -39,3 +39,12 @@ class ItemDatasource(ItemDatasourceInterface):
                 status=400
             )
         return await self.database_service.update(id, data)
+    
+    async def deleteItem(self, id: int) -> dict:
+        item = await self.database_service.checkExistence(id)
+        if not item:
+            raise EntityNotFoundException(
+                message='O registro com ID {} não existe.'.format(id),
+                status=400
+            )
+        return await self.database_service.delete(id)

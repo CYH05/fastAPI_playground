@@ -1,7 +1,7 @@
 
 from typing import Union
 
-from src.domain.exceptions.exception import AbstractBaseException, DuplicatedRegisterException, InvalidDataFormatException, MissingDataException, EntityNotFoundException
+from src.domain.exceptions.exception import DuplicatedRegisterException, InvalidDataFormatException, MissingDataException, EntityNotFoundException
 from src.infra.datasources.item_datasource import ItemDatasourceInterface
 from src.domain.entities.item_entity import Item
 from src.domain.repositories.item_repository import ItemRepositoryInterface
@@ -42,5 +42,11 @@ class ItemRepository(ItemRepositoryInterface):
             response = {'message': e.message, 'status': e.status}
         except MissingDataException as e:
             response = {'message': e.message, 'status': e.status}
-            
+        return response
+    
+    async def deleteItem(self, id: int) -> dict:
+        try:
+            response = await self.datasource.deleteItem(id)
+        except EntityNotFoundException as e:
+            response = {'message': e.message, 'status': e.status} 
         return response
